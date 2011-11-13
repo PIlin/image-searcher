@@ -27,6 +27,8 @@ public:
 
 	int run(Frame*& frames, DescrType*& descr, int& reserved);
 
+	void print_info();
+
 private:
 
 	int computeOctave(bool first);

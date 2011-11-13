@@ -129,6 +129,23 @@ int Sift::run(Frame*& frames, DescrType*& descr, int& reserved)
 	return nframes;
 }
 
+void Sift::print_info()
+{
+	printf ("sift: filter settings:\n") ;
+	printf ("sift:   octaves      (O)     = %d\n",
+		vl_sift_get_noctaves     (mSiftFlt)) ;
+	printf ("sift:   levels       (S)     = %d\n",
+		vl_sift_get_nlevels      (mSiftFlt)) ;
+	printf ("sift:   first octave (o_min) = %d\n",
+		vl_sift_get_octave_first (mSiftFlt)) ;
+	printf ("sift:   edge thresh           = %g\n",
+		vl_sift_get_edge_thresh  (mSiftFlt)) ;
+	printf ("sift:   peak thresh           = %g\n",
+		vl_sift_get_peak_thresh  (mSiftFlt)) ;
+	printf ("sift:   magnif                = %g\n",
+		vl_sift_get_magnif       (mSiftFlt)) ;
+}
+
 
 
 int Sift::computeOctave(bool first)
