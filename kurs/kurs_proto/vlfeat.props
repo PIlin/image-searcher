@@ -13,6 +13,9 @@
       <AdditionalLibraryDirectories>$(VLFEATROOT)/bin/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(VLFEATROOT)\bin\win32\vl.dll $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="VLFEATROOT">
