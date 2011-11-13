@@ -81,10 +81,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HIKMTree.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HIKMTree.hpp" />
     <ClInclude Include="Sift.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
