@@ -10,6 +10,13 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ccInvertedFile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ccInvertedFile.hpp" />
+    <ClInclude Include="src\vc_fix.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9F9EDF65-EC84-475F-A1EA-90331B457BFE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -68,9 +75,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

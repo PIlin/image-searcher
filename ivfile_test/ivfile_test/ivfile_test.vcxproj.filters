@@ -2,10 +2,5 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\1.cpp" />
-    <ClCompile Include="src\ccInvertedFile.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\ccInvertedFile.hpp" />
-    <ClInclude Include="src\vc_fix.hpp" />
   </ItemGroup>
 </Project>
