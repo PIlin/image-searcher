@@ -13,7 +13,7 @@
 using namespace std;
 
 
-typedef int wordtype;
+typedef unsigned int wordtype;
 typedef vector<wordtype> wordvec;
 typedef vector<wordvec> docvec;
 
@@ -289,7 +289,7 @@ public:
 	// nwords   - number of words
 	// ndocs    - number of docs
 	//
-	void add(wordtype* wlabel, wordtype* dlabel, uint ntokens, 
+	void fill(wordtype* wlabel, wordtype* dlabel, uint ntokens, 
 		uint nwords, uint ndocs);
 
 	//fill the inverted file with input counts
@@ -298,7 +298,7 @@ public:
 	//            all the word labels for its tokens
 	// nwords   - the total number of words
 	// idshift  - a value to add to document all ids (useful for adding more data)
-	void add(docvec const & data, uint nwords, uint idshift=0);
+	void fill(docvec const & data, uint nwords, uint idshift=0);
 
 
 	// search the inverted file for the closest document

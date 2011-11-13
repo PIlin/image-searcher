@@ -9,6 +9,7 @@
 
 #include "Sift.h"
 #include "HIKMTree.hpp"
+#include "ccInvertedFile.hpp"
 
 #include <vl/hikmeans.h>
 
@@ -157,6 +158,51 @@ void computeWords(HIKMTree& tree)
 	
 }
 
+void prepIvFile(ivFile& file, uint nwords)
+{
+	TRACE;
+
+	docvec dv;
+	for (auto it = images.begin(); it != images.end(); ++it)
+	{
+		dv.push_back((*it).words);
+	}
+
+	file.fill(dv, nwords, 0);
+	
+	file.computeStats(ivFile::WEIGHT_NONE, ivFile::NORM_L1);
+}
+
+
+void makeQuery(ivFile& ivf, vector<int> const & q)
+{
+	TRACE;
+
+	docvec query;
+
+	for (auto it = q.begin(); it != q.end(); ++it)
+	{
+		query.push_back(images[(*it)].words);
+	}
+
+	ivNodeLists score;
+
+	ivf.search(query, 
+		ivFile::WEIGHT_NONE, ivFile::NORM_L1, ivFile::DIST_L1,
+        false, (uint)5, score, false);
+	
+	cout << "Score" << endl;
+	for (auto it = score.begin(); it != score.end(); ++it)
+	{
+		ivNodeList const& nl = *it;
+		cout << "list" << endl;
+		for (auto nit = nl.begin(); nit != nl.end(); ++nit)
+		{
+			ivNode const& n = *nit;
+			cout << n.id + 1 << " " << n.val << endl;
+		}
+	}
+}
 
 int main()
 {
@@ -181,9 +227,24 @@ int main()
 	HIKMTree tree(dims, clusters, leaves);
 
 	tree.train(all_descr);
+	all_descr.clear();
 	
 	computeWords(tree);
 
+
+	////
+
+	ivFile ivf;
+	prepIvFile(ivf, tree.maxWord());
+
+
+	vector<int> q;
+	q.push_back(0);
+	q.push_back(1);
+	q.push_back(2);
+	q.push_back(3);
+
+	makeQuery(ivf, q);
 
 	return 0;
 }

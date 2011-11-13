@@ -43,7 +43,7 @@ int main()
 
 	ivFile ivf;	
 
-	ivf.add(docs, nwords, 0);
+	ivf.fill(docs, nwords, 0);
 
 	ivf.computeStats(ivFile::WEIGHT_NONE, ivFile::NORM_L1);
 

@@ -11,7 +11,7 @@
 
 
 //------------------------------------------------------------------------
-void ivFile::add(wordtype* wlabel, wordtype* dlabel, size_t ntokens, 
+void ivFile::fill(wordtype* wlabel, wordtype* dlabel, size_t ntokens, 
 	size_t nwords, size_t ndocs)
 {
 	//allocate vectors
@@ -67,7 +67,7 @@ void ivFile::add(wordtype* wlabel, wordtype* dlabel, size_t ntokens,
 // data     - the input data, with one data vector per input consisting of 
 //            all the word labels for its tokens
 // nwords   - the total number of words
-void ivFile::add(docvec const& data, uint nwords, uint idshift)
+void ivFile::fill(docvec const& data, uint nwords, uint idshift)
 {
 	cout << __FUNCTION__ << endl;
 	//number of documents
