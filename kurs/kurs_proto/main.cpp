@@ -225,11 +225,13 @@ int main()
 
 
 	HIKMTree tree(dims, clusters, leaves);
-
 	tree.train(all_descr);
-	all_descr.clear();
+	//tree.save("tree.cache");
+
+	//HIKMTree tree("tree.cache");
 	
 	computeWords(tree);
+	all_descr.clear();
 
 
 	////
