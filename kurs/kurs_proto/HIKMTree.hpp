@@ -45,6 +45,8 @@ public:
 
 private:
 
+	HIKMTree(HIKMTree const & reff);
+
 	VlHIKMTree* mTree;
 
 	int mLeaves;
