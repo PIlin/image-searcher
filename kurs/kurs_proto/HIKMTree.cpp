@@ -35,13 +35,18 @@ void HIKMTree::train(std::vector<unsigned char> const & data)
 	vl_hikm_train(mTree, &data.front(), data.size() / Dims());
 }
 
-void HIKMTree::push(std::vector<unsigned char> const & data, std::vector<unsigned int> & word)
+void HIKMTree::push(SiftDescr const * data, std::vector<unsigned int> & word) const
 {
 	word.resize(Depth() * 1);
-	vl_hikm_push(mTree, &word.front(), &data.front(), 1);
+	vl_hikm_push(mTree, &word.front(), data, 1);
 }
 
-void HIKMTree::push(std::vector<unsigned char> const & data, unsigned int & word)
+void HIKMTree::push(std::vector<SiftDescr> const & data, std::vector<unsigned int> & word)
+{
+	push(&data.front(), word);
+}
+
+void HIKMTree::push(SiftDescr const * data, unsigned int & word) const
 {
 	push(data, mWordBuf);
 
@@ -53,6 +58,11 @@ void HIKMTree::push(std::vector<unsigned char> const & data, unsigned int & word
 		word += (*it) * p;
 		p *= k;
 	}
+}
+
+void HIKMTree::push(std::vector<SiftDescr> const & data, unsigned int & word)
+{
+	push(&data.front(), word);
 }
 
 unsigned int HIKMTree::maxWord() const

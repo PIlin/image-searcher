@@ -4,9 +4,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sift.cpp" />
     <ClCompile Include="HIKMTree.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sift.h" />
     <ClInclude Include="HIKMTree.hpp" />
+    <ClInclude Include="Image.hpp" />
+    <ClInclude Include="util.hpp" />
+    <ClInclude Include="types.hpp" />
+    <ClInclude Include="cimg.hpp" />
   </ItemGroup>
 </Project>

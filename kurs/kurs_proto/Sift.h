@@ -3,12 +3,11 @@
 
 #include <vl/sift.h>
 
-//template <typename DT = unsigned char>
+#include "types.hpp"
+
 class Sift
 {
 public:
-	//typedef DT DescrType;
-	typedef unsigned char DescrType;
 
 	struct Frame 
 	{
@@ -25,7 +24,8 @@ public:
 
 	void setData(vl_sift_pix const* data);
 
-	int run(Frame*& frames, DescrType*& descr, int& reserved);
+	int run(Frame*& frames, SiftDescr*& descr, int& reserved,
+		bool getFrames = false, bool getDescrs = true);
 
 	void print_info();
 

@@ -48,9 +48,13 @@ void Sift::setData(vl_sift_pix const* data)
 	mData = data;
 }
 
-int Sift::run(Frame*& frames, DescrType*& descr, int& reserved)
+int Sift::run(Frame*& frames, SiftDescr*& descr, int& reserved, 
+	bool getFrames/* = false*/, bool getDescrs/* = true*/)
 {
 	bool first = true;
+
+	if ( !(getFrames || getDescrs) )
+		return 0;
 	
 	VlSiftKeypoint const* keys = nullptr;
 	int nkeys = 0;
@@ -98,27 +102,33 @@ int Sift::run(Frame*& frames, DescrType*& descr, int& reserved)
 				/* make enough room for all these keypoints and more */
 				if (reserved < nframes + 1) {
 					reserved += 2 * nkeys ;
-					frames = static_cast<Frame*>(
-						realloc(frames, sizeof(Frame) * reserved));
-					descr  = static_cast<DescrType*>(
-						realloc(descr,  128 * sizeof(DescrType) * reserved));
+
+					if (getFrames)
+					{
+						frames = static_cast<Frame*>(
+							realloc(frames, sizeof(Frame) * reserved));
+					}
+					if (getDescrs)
+					{
+						descr  = static_cast<SiftDescr*>(
+							realloc(descr, 128 * sizeof(SiftDescr) * reserved));
+					}
+				}
+				
+				if (getFrames)
+				{
+					frames[nframes].x     = k->x;
+					frames[nframes].y     = k->y ;
+					frames[nframes].sigma = k->sigma ;
+					frames[nframes].angle = angles[q];
 				}
 
-				/* Save back with MATLAB conventions. Notice tha the input
-				* image was the transpose of the actual image. */
-				//frames [4 * nframes + 0] = k -> y + 1 ;
-				//frames [4 * nframes + 1] = k -> x + 1 ;
-				//frames [4 * nframes + 2] = k -> sigma ;
-				//frames [4 * nframes + 3] = VL_PI / 2 - angles [q] ;
-
-				frames[nframes].x     = k->x;
-				frames[nframes].y     = k->y ;
-				frames[nframes].sigma = k->sigma ;
-				frames[nframes].angle = angles[q];
-
-				for (int j = 0; j < 128; ++j)
+				if (getDescrs)
 				{
-					descr[128 * nframes + j] = convertDescriptor<DescrType>(rbuf[j]);
+					for (int j = 0; j < 128; ++j)
+					{
+						descr[128 * nframes + j] = convertDescriptor<SiftDescr>(rbuf[j]);
+					}
 				}
 
 				++nframes;

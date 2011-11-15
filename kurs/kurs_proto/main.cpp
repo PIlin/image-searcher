@@ -1,99 +1,27 @@
-#define  XMD_H
-
-#define cimg_use_jpeg
-#include <Cimg.h>
 
 #include <iostream>
 #include <string>
 #include <vector>
 
+//#include <vl/hikmeans.h>
+
 #include "Sift.h"
 #include "HIKMTree.hpp"
 #include "ccInvertedFile.hpp"
+#include "Image.hpp"
 
-#include <vl/hikmeans.h>
+#include "util.hpp"
+
+
 
 using std::cout;
 using std::endl;
 using std::vector;
 using std::string;
 
-struct Timer {
-#if defined(WIN32)
-	LARGE_INTEGER ticFreq ;
-	LARGE_INTEGER ticMark ;
-#else
-	clock_t ticMark ;
-#endif
-
-	Timer()
-	{
-#if defined(WIN32)
-		QueryPerformanceFrequency(&ticFreq) ;
-		ticMark.QuadPart = 0;
-#else
-		ticMark = 0;
-#endif
-	}
-
-	void tic()
-	{
-#if defined(WIN32)
-		QueryPerformanceCounter (&ticMark) ;
-#else
-		ticMark = clock() ;
-#endif
-	}
-
-	double toc()
-	{
-#if defined(WIN32)
-		LARGE_INTEGER tocMark ;
-		QueryPerformanceCounter(&tocMark) ;
-		return (double)(tocMark.QuadPart - ticMark.QuadPart) / ticFreq.QuadPart;
-#else
-		return (double)(clock() - ticMark) / CLOCKS_PER_SEC ;
-#endif
-	}
-};
-
-struct Trace {
-	Trace(char const* fname) : fname(fname) { cout << fname << endl; timer.tic(); }
-	~Trace() { cout << fname << " done " << timer.toc() << endl; }
-	char const * fname;
-	Timer timer;
-};
-#define TRACE Trace __trace(__FUNCTION__)
-
-using cimg_library::CImg;
-using cimg_library::CImgDisplay;
-
-
-
-typedef unsigned char uchar;
-typedef unsigned int  uint;
-
-template<typename T>
-CImg<T> toGrayscale(CImg<T>& img)
-{
-	return (img.get_channel(0) + img.get_channel(1) + img.get_channel(2))/3;
-}
-
-struct Image {
-	string fname;
-	vector<vector<uchar> > descr;
-
-	//vector<vector<uint> > words;
-	vector<uint> words;
-
-	Image(string fname) : 
-	fname(fname) 
-	{
-	}
-};
 
 vector <Image> images;
-vector <uchar> all_descr;
+vector <SiftDescr> all_descr;
 
 void initImages()
 {
@@ -105,34 +33,21 @@ void initImages()
 	{
 		Image& i = *it;
 
-		CImg<> dest = toGrayscale(CImg<uchar>(i.fname.c_str()));
+		i.open();
+		i.siftIt();
 
-		//cout << i.fname << '\n';
-		//cout << "w: " << dest.width() << '\n';
-		//cout << "h: " << dest.height() << '\n';
-		//cout << "s: " << dest.size() << endl;
+		SiftDescr const * descr = i.getDescr();
+		size_t descrCount = i.getDescrCount();
 
-		Sift sift(dest.width(), dest.height());
-		sift.setData(dest.data());
-		Sift::Frame* frames = nullptr;
-		Sift::DescrType* desc = nullptr;
-		int reserved = 0;
+		all_descr.reserve(all_descr.size() + descrCount * 128 * sizeof(SiftDescr));
 
-		int n = sift.run(frames, desc, reserved);
-		//cout << "n: " << n << endl;
-
-		i.descr.clear();
-		i.descr.reserve(n);
-
-		all_descr.reserve(all_descr.size() + n*128);
-
-		for (int j = 0; j < n; ++j)
+		for (int j = 0; j < descrCount; ++j)
 		{
-			const auto b = desc + 128 * j;
+			const auto b = descr + 128*j;
 			const auto e = b + 128;
-			i.descr.push_back(vector<uchar>(b, e));
 			all_descr.insert(all_descr.end(), b, e);
 		}
+
 	}
 }
 
@@ -145,17 +60,9 @@ void computeWords(HIKMTree& tree)
 	{
 		Image& i = *it;
 
-		i.words.clear();
-		i.words.resize(i.descr.size());
-		size_t j = 0;
-		for (auto dit = i.descr.begin(); dit != i.descr.end(); ++dit)
-		{
-			auto& d = *dit;
-			tree.push(d, i.words[j]);
-			++j;
-		}
+		i.computeWords(tree);
+		i.forgetDescr();
 	}
-	
 }
 
 void prepIvFile(ivFile& file, uint nwords)
@@ -165,7 +72,7 @@ void prepIvFile(ivFile& file, uint nwords)
 	docvec dv;
 	for (auto it = images.begin(); it != images.end(); ++it)
 	{
-		dv.push_back((*it).words);
+		dv.push_back((*it).getWords());
 	}
 
 	file.fill(dv, nwords, 0);
@@ -182,7 +89,7 @@ void makeQuery(ivFile& ivf, vector<int> const & q)
 
 	for (auto it = q.begin(); it != q.end(); ++it)
 	{
-		query.push_back(images[(*it)].words);
+		query.push_back(images[(*it)].getWords());
 	}
 
 	ivNodeLists score;

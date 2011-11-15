@@ -6,6 +6,8 @@
 #include <istream>
 #include <ostream>
 
+#include "types.hpp"
+
 
 class HIKMTree
 {
@@ -16,9 +18,10 @@ public:
 
 	void train(std::vector<unsigned char> const & data);
 
-	void push(std::vector<unsigned char> const & data, std::vector<unsigned int> & word);
-	void push(std::vector<unsigned char> const & data, unsigned int & word);
-
+	void push(SiftDescr const * data, std::vector<unsigned int> & word) const;
+	void push(std::vector<SiftDescr> const & data, std::vector<unsigned int> & word);
+	void push(SiftDescr const * data, unsigned int & word) const;
+	void push(std::vector<SiftDescr> const & data, unsigned int & word);
 
 	unsigned int maxWord() const;
 
@@ -51,7 +54,7 @@ private:
 
 	int mLeaves;
 
-	std::vector<unsigned int> mWordBuf;
+	mutable std::vector<unsigned int> mWordBuf;
 
 };
 
