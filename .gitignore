@@ -1,6 +1,8 @@
 */Debug/
+*/Release/
 */ipch/
 */*/Debug/
+*/*/Release/
 */*/*.vcxproj.user
 */*.opensdf
 */*.sdf
