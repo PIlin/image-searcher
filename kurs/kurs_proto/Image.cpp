@@ -93,7 +93,7 @@ void Image::saveDescr(std::string const & fname)
 {
 	std::ofstream of;
 	of.open(fname.c_str(), std::ofstream::binary);
-	save(of);
+	saveDescr(of);
 	of.close();
 }
 
