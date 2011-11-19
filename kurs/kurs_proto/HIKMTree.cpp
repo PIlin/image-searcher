@@ -1,8 +1,8 @@
 #include <exception>
+#include <fstream>
 
 #include "HIKMTree.hpp"
-
-#include <fstream>
+#include "util.hpp"
 
 
 HIKMTree::HIKMTree(int dims, int clusters, int leaves, VlIKMAlgorithms method):
@@ -99,18 +99,7 @@ void HIKMTree::load(std::istream& is)
 
 //////////////////////////////////////////////////////////////////////////
 
-template<typename T>
-void write(std::ostream & os, T const & t)
-{
-	os.write(reinterpret_cast<char const *>(&t), sizeof(t));
-}
-template<typename T>
-void read(std::istream & is, T & t)
-{
-	is.read(reinterpret_cast<char*>(&t), sizeof(t));
-}
-#define WRITE(t) write(os, t)
-#define READ(t)  read(is, t)
+
 
 std::ostream& operator<<(std::ostream& os, HIKMTree const & tree)
 {

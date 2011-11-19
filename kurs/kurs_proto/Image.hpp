@@ -33,6 +33,13 @@ public:
 	void load(std::string const & fname);
 	void load(std::istream& is);
 	
+
+	void saveDescr(std::string const & fname);
+	void saveDescr(std::ostream& os);
+
+	void loadDescr(std::string const & fname);
+	void loadDescr(std::istream& is);
+
 	int getWidth() const;
 	int getHeight() const;
 

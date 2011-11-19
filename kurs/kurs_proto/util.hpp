@@ -27,3 +27,18 @@ struct Trace {
 	Timer timer;
 };
 #define TRACE Trace __trace(__FUNCTION__)
+
+//////////////////////////////////////////////////////////////////////////
+
+template<typename T>
+void write(std::ostream & os, T const & t)
+{
+	os.write(reinterpret_cast<char const *>(&t), sizeof(t));
+}
+template<typename T>
+void read(std::istream & is, T & t)
+{
+	is.read(reinterpret_cast<char*>(&t), sizeof(t));
+}
+#define WRITE(t) write(os, t)
+#define READ(t)  read(is, t)
