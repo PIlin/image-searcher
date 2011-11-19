@@ -5,10 +5,10 @@
 #include <string>
 #include <vector>
 
-#include "cimg.hpp"
 
-#include "types.hpp"
-#include "HIKMTree.hpp"
+#include "Util/types.hpp"
+
+class Image_pimpl;
 
 class Image
 {
@@ -19,7 +19,6 @@ public:
 
 	void open();
 	void siftIt();
-	void computeWords(HIKMTree const & tree);
 
 	void forgetDescr();
 
@@ -46,17 +45,11 @@ public:
 	SiftDescr const* getDescr() const;
 	size_t getDescrCount() const;
 
-	std::vector<Word> const & getWords() const;
+	std::vector<Word> & getWords();
 
 private:
 
-	template<typename T>
-	T toGrayscale(T& img)
-	{
-		return (img.get_channel(0) + img.get_channel(1) + img.get_channel(2))/3;
-	}
-
-	typedef cimg_library::CImg<float> CIMG;
+	Image_pimpl* pimpl;
 
 	std::string mFname;
 
@@ -65,5 +58,5 @@ private:
 	SiftDescr* mpDescr;
 	size_t mDescrCount;
 
-	CIMG mImage;
+	
 };

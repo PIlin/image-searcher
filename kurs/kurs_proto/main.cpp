@@ -5,12 +5,12 @@
 
 //#include <vl/hikmeans.h>
 
-#include "Sift.h"
-#include "HIKMTree.hpp"
+#include "Sift/Sift.hpp"
+#include "HIKMTree/HIKMTree.hpp"
 #include "ccInvertedFile.hpp"
-#include "Image.hpp"
+#include "Image/Image.hpp"
 
-#include "util.hpp"
+#include "Util/util.hpp"
 
 
 
@@ -60,7 +60,8 @@ void computeWords(HIKMTree& tree)
 	{
 		Image& i = *it;
 
-		i.computeWords(tree);
+		tree.push(i);
+		//i.computeWords(tree);
 		i.forgetDescr();
 	}
 }

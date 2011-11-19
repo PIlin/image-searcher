@@ -6,8 +6,9 @@
 #include <istream>
 #include <ostream>
 
-#include "types.hpp"
+#include "Util/types.hpp"
 
+class Image;
 
 class HIKMTree
 {
@@ -22,6 +23,8 @@ public:
 	void push(std::vector<SiftDescr> const & data, std::vector<unsigned int> & word);
 	void push(SiftDescr const * data, unsigned int & word) const;
 	void push(std::vector<SiftDescr> const & data, unsigned int & word);
+
+	void push(Image& img);
 
 	unsigned int maxWord() const;
 

@@ -2,8 +2,8 @@
 #include <fstream>
 
 #include "HIKMTree.hpp"
-#include "util.hpp"
-
+#include "Util/util.hpp"
+#include "Image/Image.hpp"
 
 HIKMTree::HIKMTree(int dims, int clusters, int leaves, VlIKMAlgorithms method):
 	mTree(nullptr),
@@ -63,6 +63,22 @@ void HIKMTree::push(SiftDescr const * data, unsigned int & word) const
 void HIKMTree::push(std::vector<SiftDescr> const & data, unsigned int & word)
 {
 	push(&data.front(), word);
+}
+
+void HIKMTree::push(Image& img)
+{
+	TRACE;
+
+	auto & iwords = img.getWords();
+	auto    idscr = img.getDescr();
+	auto   nidscr = img.getDescrCount();
+
+	iwords.clear();
+	iwords.resize(nidscr);
+	for (size_t i = 0; i < nidscr; ++i)
+	{
+		push(&idscr[i * 128], iwords[i]);
+	}
 }
 
 unsigned int HIKMTree::maxWord() const

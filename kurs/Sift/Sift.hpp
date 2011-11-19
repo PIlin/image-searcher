@@ -3,7 +3,7 @@
 
 #include <vl/sift.h>
 
-#include "types.hpp"
+#include "Util/types.hpp"
 
 class Sift
 {

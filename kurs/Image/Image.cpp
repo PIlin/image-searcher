@@ -2,16 +2,17 @@
 #include <fstream>
 
 #include "Image.hpp"
+#include "Image_pimpl.hpp"
 
-#include "util.hpp"
+#include "Util/util.hpp"
 
-#include "Sift.h"
+#include "Sift/Sift.hpp"
 
 Image::Image(std::string fname):
+	pimpl(new Image_pimpl),
 	mFname(fname),
 	mpDescr(nullptr),
-	mDescrCount(0),
-	mImage()
+	mDescrCount(0)
 {
 }
 
@@ -24,14 +25,14 @@ Image::~Image()
 void Image::open()
 {
 	TRACE;
-	mImage = toGrayscale(CIMG(mFname.c_str()));
+	pimpl->open(mFname);
 }
 
 void Image::siftIt()
 {
 	TRACE;
 	Sift sift(getWidth(), getHeight());
-	sift.setData(mImage.data());
+	sift.setData(pimpl->mImage.data());
 	
 	//Sift::Frame* frames = nullptr;
 	int reserved = 0;
@@ -40,18 +41,6 @@ void Image::siftIt()
 
 	Sift::Frame* f = nullptr;
 	mDescrCount = sift.run(f, mpDescr, reserved);
-}
-
-void Image::computeWords(HIKMTree const & tree)
-{
-	TRACE;
-
-	mWords.clear();
-	mWords.resize(mDescrCount);
-	for (size_t i = 0; i < mDescrCount; ++i)
-	{
-		tree.push(&mpDescr[i * 128], mWords[i]);
-	}
 }
 
 void Image::forgetDescr()
@@ -125,12 +114,12 @@ void Image::loadDescr(std::istream& is)
 
 int Image::getWidth() const 
 {
-	return mImage.width();
+	return pimpl->mImage.width();
 }
 
 int Image::getHeight() const
 {
-	return mImage.height();
+	return pimpl->mImage.height();
 }
 
 SiftDescr const * Image::getDescr() const
@@ -143,7 +132,7 @@ size_t Image::getDescrCount() const
 	return mDescrCount;
 }
 
-std::vector<Word> const & Image::getWords() const
+std::vector<Word> & Image::getWords()
 {
 	return mWords;
 }
