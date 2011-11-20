@@ -13,7 +13,7 @@ namespace bfs = boost::filesystem;
 
 void print_help(char const* pname)
 {
-	std::cout << pname << " infile outfile" << std::endl;
+	std::cout << pname << " image_infile sift_outfile" << std::endl;
 }
 
 int main(int argc, char* argv[])
