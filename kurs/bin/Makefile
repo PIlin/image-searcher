@@ -16,6 +16,8 @@ ALL_WORD_FILES := $(patsubst %.sift,%.word,$(ALL_SIFT_FILES))
 
 TREE_FILE := $(abspath $(BASE_DIR)/hikm.tree)
 
+IVF_FILE := $(abspath $(BASE_DIR)/ivf.file)
+
 define SIFT_FILE_template
 $(abspath $(call SIFT_BASEFILE_FUNC,$(1)) ) : $(1) | $(BASE_DIR)
 	isifter $$< $$@
@@ -33,8 +35,12 @@ $(TREE_FILE): $(ALL_SIFT_FILES) | $(BASE_DIR)
 %.word : $(TREE_FILE) %.sift | $(BASE_DIR)
 	iwords $^ $@
 
+$(IVF_FILE): $(TREE_FILE) $(ALL_WORD_FILES) | $(BASE_DIR)
+	ivf_creator $@ $^
+	
 # all: $(TREE_FILE)
-base: $(ALL_WORD_FILES)
+# base: $(ALL_WORD_FILES)
+base: $(IVF_FILE)
 
 
 
