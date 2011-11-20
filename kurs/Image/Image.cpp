@@ -93,14 +93,14 @@ void Image::saveDescr(std::ostream& os)
 		throw std::runtime_error("No sift descriptors");
 
 	WRITE(mDescrCount);
-	os.write(reinterpret_cast<char const *>(mpDescr), sizeof(mpDescr[0]) * mDescrCount);
+	os.write(reinterpret_cast<char const *>(mpDescr), sizeof(mpDescr[0]) * mDescrCount * 128);
 }
 
 void Image::loadDescr(std::string const & fname)
 {
 	std::ifstream ifs;
 	ifs.open(fname.c_str(), std::ifstream::binary);
-	load(ifs);
+	loadDescr(ifs);
 	ifs.close();
 }
 
@@ -108,8 +108,8 @@ void Image::loadDescr(std::istream& is)
 {
 	forgetDescr();
 	READ(mDescrCount);
-	mpDescr = static_cast<SiftDescr*>(malloc(sizeof(SiftDescr) * mDescrCount));
-	is.read(reinterpret_cast<char*>(mpDescr), sizeof(mpDescr[0]) * mDescrCount);
+	mpDescr = static_cast<SiftDescr*>(malloc(sizeof(SiftDescr) * mDescrCount * 128));
+	is.read(reinterpret_cast<char*>(mpDescr), sizeof(mpDescr[0]) * mDescrCount * 128);
 }
 
 int Image::getWidth() const 
