@@ -51,7 +51,6 @@ void make_query(Image& img, HIKMTree& tree, ivFile& ivf, std::ostream& out)
 {
 	TRACE;
 
-	DebugBreak();
 	docvec query;
 	query.push_back(img.getWords());
 
