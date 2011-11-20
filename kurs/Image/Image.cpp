@@ -143,6 +143,9 @@ std::ostream& operator<<(std::ostream& os, Image const & img)
 {
 	os << img.mFname;
 
+	if (img.mWords.size() == 0)
+		throw std::runtime_error("No words in image");
+
 	WRITE(img.mWords.size());
 	os.write(reinterpret_cast<char const*>(&img.mWords.front()), 
 		sizeof(img.mWords[0]) * img.mWords.size());

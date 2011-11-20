@@ -10,7 +10,7 @@ public:
 	Image_pimpl(void);
 	~Image_pimpl(void);
 
-	void open(std::string fname);
+	void open(std::string const & fname);
 
 	template<typename T>
 	T toGrayscale(T& img)
