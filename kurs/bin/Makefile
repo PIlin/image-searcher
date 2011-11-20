@@ -1,8 +1,8 @@
 include basefiles.mk
 
-BASE_DIR := ./base
+BASE_DIR := ./cache
 
-all:
+nothing:
 
 
 SIFT_BASEFILE_FUNC = $(addprefix $(BASE_DIR)/,$(addsuffix .sift,$(subst :,,$(subst /,_,$(1)))))
@@ -11,6 +11,8 @@ SIFT_BASEFILE_FUNC = $(addprefix $(BASE_DIR)/,$(addsuffix .sift,$(subst :,,$(sub
 
 # ALL_SIFT_FILES := $(abspath ./base/d_Downloads_caltech_101_kangaroo_image_0001.jpg.sift)
 ALL_SIFT_FILES := $(abspath $(call SIFT_BASEFILE_FUNC,$(BASEFILES)) )
+
+ALL_WORD_FILES := $(patsubst %.sift,%.word,$(ALL_SIFT_FILES))
 
 TREE_FILE := $(abspath $(BASE_DIR)/hikm.tree)
 
@@ -28,13 +30,19 @@ $(TREE_FILE): $(ALL_SIFT_FILES) | $(BASE_DIR)
 	tree_creator $@ $^
 
 
-all: $(TREE_FILE)
+%.word : $(TREE_FILE) %.sift | $(BASE_DIR)
+	iwords $^ $@
+
+# all: $(TREE_FILE)
+base: $(ALL_WORD_FILES)
 
 
 
-
+clean:
+	rm -rf $(BASE_DIR)
 
 
 $(BASE_DIR): 
 	mkdir -p $@
 
+.PHONY: nothing base clean query
