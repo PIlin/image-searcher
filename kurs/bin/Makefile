@@ -1,10 +1,14 @@
 BASEFILES_LIST := basefiles.mk
-
+QUERY_IN_FILE := query.in
+QUERY_OUT_FILE := query.out
+RES_OUT_FILE := res.htm
 
 BASE_DIR := ./cache
 FILELIST_FILE := $(abspath $(BASE_DIR)/file.list)
 TREE_FILE := $(abspath $(BASE_DIR)/hikm.tree)
 IVF_FILE := $(abspath $(BASE_DIR)/ivf.file)
+
+
 
 include $(BASEFILES_LIST)
 
@@ -45,8 +49,9 @@ clean:
 	rm -rf $(BASE_DIR)
 
 
-query:
-	query_maker -i d:\Downloads\caltech_101\kangaroo\image_0001.jpg -t cache\hikm.tree -v cache\ivf.file -o --
+query: $(QUERY_IN_FILE)
+	query_maker -i $(shell cat $(QUERY_IN_FILE)) -t $(TREE_FILE) -v $(IVF_FILE) -o  $(QUERY_OUT_FILE)
+	python query.py $(FILELIST_FILE) $(QUERY_IN_FILE) $(QUERY_OUT_FILE) $(RES_OUT_FILE)
 	
 $(BASE_DIR): 
 	mkdir -p $@
