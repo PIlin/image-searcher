@@ -1,0 +1,1 @@
+BASEFILES := $(wildcard d:/Downloads/caltech_101/kangaroo/*)
