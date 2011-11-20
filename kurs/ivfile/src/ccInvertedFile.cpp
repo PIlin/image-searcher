@@ -592,12 +592,14 @@ ostream& operator<<(ostream& os, ivWordDoc const& ivwd)
 {
 	os.write((char*)&ivwd.count, sizeof(ivwd.count));
 	os.write((char*)&ivwd.doc, sizeof(ivwd.doc));
+	os.write((char*)&ivwd.val, sizeof(ivwd.val));
 	return os;
 }
 istream& operator>>(istream& is, ivWordDoc& ivwd)
 {
 	is.read((char*)&ivwd.count, sizeof(ivwd.count));
 	is.read((char*)&ivwd.doc, sizeof(ivwd.doc));
+	is.read((char*)&ivwd.val, sizeof(ivwd.val));
 	return is;
 }
 
