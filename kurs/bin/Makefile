@@ -1,6 +1,8 @@
 BASEFILES_LIST := basefiles.mk
 
+
 BASE_DIR := ./cache
+FILELIST_FILE := $(abspath $(BASE_DIR)/file.list)
 TREE_FILE := $(abspath $(BASE_DIR)/hikm.tree)
 IVF_FILE := $(abspath $(BASE_DIR)/ivf.file)
 
@@ -30,9 +32,12 @@ $(TREE_FILE): $(ALL_SIFT_FILES) $(BASEFILES_LIST) | $(BASE_DIR)
 $(IVF_FILE): $(TREE_FILE) $(ALL_WORD_FILES) $(BASEFILES_LIST) | $(BASE_DIR)
 	ivf_creator $@ $(TREE_FILE) $(ALL_WORD_FILES)
 	
+$(FILELIST_FILE): $(BASEFILES_LIST) | $(BASE_DIR)
+	echo $(BASEFILES) | tr ' ' '\n' > $@
+	
 # all: $(TREE_FILE)
 # base: $(ALL_WORD_FILES)
-base: $(IVF_FILE)
+base: $(IVF_FILE) $(FILELIST_FILE)
 
 
 
