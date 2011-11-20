@@ -40,6 +40,9 @@ clean:
 	rm -rf $(BASE_DIR)
 
 
+query:
+	query_maker -i d:\Downloads\caltech_101\kangaroo\image_0001.jpg -t cache\hikm.tree -v cache\ivf.file -o --
+	
 $(BASE_DIR): 
 	mkdir -p $@
 
