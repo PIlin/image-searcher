@@ -141,7 +141,7 @@ std::vector<Word> & Image::getWords()
 
 std::ostream& operator<<(std::ostream& os, Image const & img)
 {
-	os << img.mFname;
+	//os << img.mFname;
 
 	if (img.mWords.size() == 0)
 		throw std::runtime_error("No words in image");
@@ -155,7 +155,7 @@ std::ostream& operator<<(std::ostream& os, Image const & img)
 
 std::istream& operator>>(std::istream& is, Image & img)
 {
-	is >> img.mFname;
+	//is >> img.mFname;
 
 	size_t s;
 	READ(s);
