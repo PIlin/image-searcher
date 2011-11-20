@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #if defined(WIN32)
 #define WINDOWS_LEAN_AND_MEAN
 #include "Windows.h"
@@ -42,3 +44,7 @@ void read(std::istream & is, T & t)
 }
 #define WRITE(t) write(os, t)
 #define READ(t)  read(is, t)
+
+//////////////////////////////////////////////////////////////////////////
+
+bool checkFile(std::string const & p);

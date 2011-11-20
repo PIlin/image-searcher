@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <boost/filesystem.hpp>
+
 #include "util.hpp"
 
 Timer::Timer()
@@ -46,4 +48,11 @@ Trace::~Trace()
 	std::cout << fname << " done " << timer.toc() 
 //		<< std::endl; 
 		<< '\n';
+}
+
+bool checkFile(std::string const & p)
+{
+	namespace bfs = boost::filesystem;
+	bfs::path pp(p);
+	return bfs::exists(pp) && bfs::is_regular_file(pp);
 }
