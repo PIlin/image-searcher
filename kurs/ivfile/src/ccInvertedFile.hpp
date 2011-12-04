@@ -210,31 +210,31 @@ public:
 	//enumerators for normalization
 	enum Norm
 	{
-		NORM_NONE,
-		NORM_L0,
-		NORM_L1,
-		NORM_L2,           
+		NORM_NONE,  // no normalization
+		NORM_L0,    // normalize by the number of words
+		NORM_L1,    // normalize so that the histogram sum = 1
+		NORM_L2,    // normalize so that histogram sum square = 1 
 	};
 
 	//enumerators for distance measure
 	enum Dist
 	{
-		DIST_L1,
-		DIST_L2,
-		DIST_HAM,
-		DIST_KL,
-		DIST_COS,
-		DIST_JAC,
-		DIST_HISTINT
+		DIST_L1,     // l1 distance
+		DIST_L2,     // l2 distance
+		DIST_HAM,    // hamming distance
+		DIST_KL,     // 
+		DIST_COS,    // cos distance (dot product)
+		DIST_JAC,    // Jacquard distance
+		DIST_HISTINT // Histogram Intersection 
 	};
 
 	//enumerators for weight to use
 	enum Weight
 	{
-		WEIGHT_NONE,
-		WEIGHT_BIN,
-		WEIGHT_TF,
-		WEIGHT_TFIDF
+		WEIGHT_NONE,    // don't weight counts values 
+		WEIGHT_BIN,     // binarize the counts 
+		WEIGHT_TF,      // term frequency, divide each count by the number of words in the doc  
+		WEIGHT_TFIDF    // use tf-idf weighting
 	};
 
 	//constructor
