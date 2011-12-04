@@ -3,8 +3,10 @@
   <ItemGroup>
     <ClInclude Include="types.hpp" />
     <ClInclude Include="util.hpp" />
+    <ClInclude Include="opts.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="util.cpp" />
+    <ClCompile Include="opts.cpp" />
   </ItemGroup>
 </Project>

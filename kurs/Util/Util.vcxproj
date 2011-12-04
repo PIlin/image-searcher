@@ -11,10 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="opts.hpp" />
     <ClInclude Include="types.hpp" />
     <ClInclude Include="util.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="opts.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
