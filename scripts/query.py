@@ -33,7 +33,7 @@ def to_url(path):
 f = open(res_out, 'w')
 f.write(r'<html><head></head><body>')
 
-f.write('<p>Query<br/><img src="')
+f.write('<p>Query<br/><img border="1" src="')
 f.write(to_url(query))
 f.write('"></p><hr/>')
 
