@@ -1000,4 +1000,5 @@ image_2356.jpg \
 image_2357.jpg \
 image_2359.jpg 
 
-BASEFILES := $(addprefix e:/caltech_1000/,$(BASEFILES))
+BASEFILES := $(addprefix ../../images/caltech_1000/,$(BASEFILES))
+BASEFILES := $(abspath $(BASEFILES))

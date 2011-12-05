@@ -5,10 +5,10 @@
 # Usage: $(call xargs,COMMAND,LIST)
 #
 # COMMAND should be a shell command to which the words will be
-# appended as arguments in groups of 200.
+# appended as arguments in groups of 50.
 define xargs
-$(1) $(wordlist 1,200,$(2))
-$(if $(word 201,$(2)),$(call xargs,$(1),$(wordlist 201,$(words $(2)),$(2))))
+$(1) $(wordlist 1,50,$(2))
+$(if $(word 51,$(2)),$(call xargs,$(1),$(wordlist 51,$(words $(2)),$(2))))
 endef
 
 # Macro for writing the contents of a word list to a file, one word
