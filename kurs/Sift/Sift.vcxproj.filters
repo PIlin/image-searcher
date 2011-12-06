@@ -4,7 +4,6 @@
     <ClCompile Include="Sift.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sift.h" />
     <ClInclude Include="Sift.hpp" />
   </ItemGroup>
 </Project>
