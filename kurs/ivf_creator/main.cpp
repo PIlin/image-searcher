@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) try
 
 	ivFile file;
 	file.fill(dv, tree.maxWord(), 0);
-	file.computeStats(ivFile::WEIGHT_NONE, ivFile::NORM_L1);
+	file.computeStats();
 
 
 	file.save(ofname);

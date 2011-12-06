@@ -78,7 +78,7 @@ void prepIvFile(ivFile& file, uint nwords)
 
 	file.fill(dv, nwords, 0);
 	
-	file.computeStats(ivFile::WEIGHT_NONE, ivFile::NORM_L1);
+	file.computeStats();
 }
 
 
@@ -96,7 +96,7 @@ void makeQuery(ivFile& ivf, vector<int> const & q)
 	ivNodeLists score;
 
 	ivf.search(query, 
-		ivFile::WEIGHT_NONE, ivFile::NORM_L1, ivFile::DIST_L1,
+		ivFile::DIST_L1,
         false, (uint)5, score, false);
 	
 	cout << "Score" << endl;

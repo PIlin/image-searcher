@@ -38,7 +38,7 @@ void make_query(Image& img, HIKMTree& tree, ivFile& ivf, std::ostream& out)
 	ivNodeLists score;
 
 	ivf.search(query, 
-		ivFile::WEIGHT_NONE, ivFile::NORM_L1, ivFile::DIST_L1,
+		ivFile::DIST_L1,
         false, (uint)5, score, false);
 	
 	for (auto it = score.begin(); it != score.end(); ++it)

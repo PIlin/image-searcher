@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <exception>
 #include <fstream>
 #include <string>
 #include <iterator>
@@ -134,8 +135,11 @@ void ivFile::fill(docvec const& data, uint nwords, uint idshift)
 
 
 //------------------------------------------------------------------------
-void ivFile::computeStats(ivFile::Weight wt, ivFile::Norm norm)
+void ivFile::computeStats()
 {
+	Weight wt = params.weight;
+	Norm norm = params.norm;
+
 	cout << __FUNCTION__ << "wt " << wt << " norm " << norm << endl;
 	uint i;
 
@@ -509,9 +513,12 @@ void ivFile::search(const wordtype* wlabel, uint ntokens,
 
 //------------------------------------------------------------------------
 void ivFile::search(docvec const & data, 
-	ivFile::Weight weight, ivFile::Norm norm, ivFile::Dist dist,
+	ivFile::Dist dist,
 	bool overlapOnly, uint k, ivNodeLists& scorelists, bool verbose=false) const
 {
+	Weight weight = params.weight;
+	Norm norm     = params.norm;
+
 	cerr << __FUNCTION__ << "weight " << weight << " norm " << norm << " dist " << dist << endl;
 	//number of documents
 	uint ndocs = data.size();
@@ -623,6 +630,9 @@ istream& operator>>(istream& is, ivDoc& ivdoc)
 ostream& operator<<(ostream& os, ivFile const& ivf)
 {
 	uint i;
+
+	os << ivf.params;
+
 	//save the document array
 	//
 	//put the size
@@ -654,6 +664,8 @@ ostream& operator<<(ostream& os, ivFile const& ivf)
 istream& operator>>(istream& is, ivFile& ivf)
 {
 	uint i;
+
+	is >> ivf.params;
 
 	//read the document array
 	//
@@ -687,6 +699,35 @@ istream& operator>>(istream& is, ivFile& ivf)
 			is >> *wdit;
 	}
 	return is;
+}
+
+istream& operator>>(istream& is, ivFile::Params& pr)
+{
+	uint a;
+
+	is >> a; pr.norm   = static_cast<ivFile::Norm>(a);
+	is >> a; pr.weight = static_cast<ivFile::Weight>(a);
+	
+	try 
+	{
+		pr.check();
+	}
+	catch(...)
+	{
+		is.setstate(is.rdstate() | std::ios::failbit);
+		throw;
+	}
+
+	return is;
+}
+
+ostream& operator<<(ostream& os, ivFile::Params const& pr)
+{
+	uint a;
+	a = pr.norm;   os << a;
+	a = pr.weight; os << a;
+
+	return os;
 }
 
 //------------------------------------------------------------------------
@@ -761,3 +802,11 @@ void ivFile::display( bool show_docs/* = true*/, bool show_words/* = false*/ )
 //------------------------------------------------------------------------
 
 
+void ivFile::Params::check() throw(std::logic_error)
+{
+#define CHECK(A,B) if (A >= B) throw std::logic_error(#A "cannot be " #B);
+
+	CHECK(norm, NORM_LAST);
+	CHECK(weight, WEIGHT_LAST);
+#undef CHECK
+}

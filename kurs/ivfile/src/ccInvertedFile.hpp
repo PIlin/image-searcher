@@ -194,18 +194,6 @@ typedef ivWordList::iterator ivWordIt;
 class ivFile
 {
 public:
-	//file name for disk index
-	string diskFilename;
-	//filename for memory part
-	string memFilename;
-
-	//array of word entries
-	size_t nwords;
-	ivWordList words;
-
-	//array of document entries
-	size_t ndocs;
-	ivDocList docs;
 
 	//enumerators for normalization
 	enum Norm
@@ -214,18 +202,20 @@ public:
 		NORM_L0,    // normalize by the number of words
 		NORM_L1,    // normalize so that the histogram sum = 1
 		NORM_L2,    // normalize so that histogram sum square = 1 
+		NORM_LAST
 	};
 
 	//enumerators for distance measure
 	enum Dist
 	{
-		DIST_L1,     // l1 distance
-		DIST_L2,     // l2 distance
-		DIST_HAM,    // hamming distance
-		DIST_KL,     // 
-		DIST_COS,    // cos distance (dot product)
-		DIST_JAC,    // Jacquard distance
-		DIST_HISTINT // Histogram Intersection 
+		DIST_L1,      // l1 distance
+		DIST_L2,      // l2 distance
+		DIST_HAM,     // hamming distance
+		DIST_KL,      // 
+		DIST_COS,     // cos distance (dot product)
+		DIST_JAC,     // Jacquard distance
+		DIST_HISTINT, // Histogram Intersection 
+		DIST_LAST
 	};
 
 	//enumerators for weight to use
@@ -234,14 +224,36 @@ public:
 		WEIGHT_NONE,    // don't weight counts values 
 		WEIGHT_BIN,     // binarize the counts 
 		WEIGHT_TF,      // term frequency, divide each count by the number of words in the doc  
-		WEIGHT_TFIDF    // use tf-idf weighting
+		WEIGHT_TFIDF,   // use tf-idf weighting
+		WEIGHT_LAST
+	};
+
+	struct Params
+	{
+		Params(Norm norm = NORM_L1, Weight weight = WEIGHT_NONE) : 
+			norm(norm),
+			weight(weight)
+		{
+			check(); 
+		}
+
+		Norm norm;
+		Weight weight;
+
+		void check() throw(std::logic_error);
+
+		//stream overloads
+		friend istream& operator>>(istream& is, Params& pr);
+		friend ostream& operator<<(ostream& os, Params const& pr);
 	};
 
 	//constructor
-	ivFile() :
+	ivFile(ivFile::Params params = ivFile::Params()) :
 		nwords(0),
-		ndocs(0)
+		ndocs(0),
+		params(params)
 	{ 
+		params.check();
 	}
 
 	//desctructor
@@ -263,23 +275,7 @@ public:
 	void clear();
 
 	//compute stats: document norms, weights, ... to prepare for search
-	void computeStats(ivFile::Weight wt, ivFile::Norm norm);
-
-	//stream overloads
-	friend istream& operator>>(istream& is, ivFile& ivf);
-	friend ostream& operator<<(ostream& os, ivFile const& ivf);
-
-	//weight a document value
-	inline float weightVal(float val, ivWord const & word, ivDoc const& doc, ivFile::Weight wt) const;
-
-	//normalize a document value
-	inline float normVal(float val, ivDoc& doc, ivFile::Norm norm) const;
-
-	//compute distance
-	inline float dist(float val1, float val2, ivFile::Dist dist) const;
-
-	//convert form a distance to a norm
-	inline float dist2Norm(ivDoc const & doc, ivFile::Dist dist, ivFile::Norm norm) const;
+	void computeStats();
 
 	//fill the inverted file with input counts
 	//
@@ -300,7 +296,21 @@ public:
 	// idshift  - a value to add to document all ids (useful for adding more data)
 	void fill(docvec const & data, uint nwords, uint idshift=0);
 
+	// search the inverted file for the closest document
+	//
+	// data     - the input data, with one vector per iput
+	// weight   - weight to use for individual counts (binary, term-freq, ..)
+	// norm     - normalization of weights (L1, L2, ...)
+	// dist     - distance measure to use (L1, L2, ...)
+	// overlapOnly - return only those documents with overlapping words
+	// k        - no. of output required per document, if 0 then return everything
+	// scorelists   - a list of ivNOdeList to hold the results
+	//
+	void search(docvec const & data, 
+		ivFile::Dist dist,
+		bool overlapOnly, uint k, ivNodeLists& scorelists, bool verbose) const;
 
+private:
 	// search the inverted file for the closest document
 	//
 	// wlabel   - word labels for every token, 1->nwords
@@ -315,21 +325,38 @@ public:
 	void search(const wordtype* wlabel, uint ntokens, 
 		ivFile::Weight weight, ivFile::Norm norm, ivFile::Dist dist,
 		bool overlapOnly, uint k, ivNodeList& scorelist) const;
-	//          float* scores, uint* docs, uint& nret);  
 
-	// search the inverted file for the closest document
-	//
-	// data     - the input data, with one vector per iput
-	// weight   - weight to use for individual counts (binary, term-freq, ..)
-	// norm     - normalization of weights (L1, L2, ...)
-	// dist     - distance measure to use (L1, L2, ...)
-	// overlapOnly - return only those documents with overlapping words
-	// k        - no. of output required per document, if 0 then return everything
-	// scorelists   - a list of ivNOdeList to hold the results
-	//
-	void search(docvec const & data, 
-		ivFile::Weight weight, ivFile::Norm norm, ivFile::Dist dist,
-		bool overlapOnly, uint k, ivNodeLists& scorelists, bool verbose) const;
+
+private:
+		
+	//weight a document value
+	inline float weightVal(float val, ivWord const & word, ivDoc const& doc, ivFile::Weight wt) const;
+
+	//normalize a document value
+	inline float normVal(float val, ivDoc& doc, ivFile::Norm norm) const;
+
+	//compute distance
+	inline float dist(float val1, float val2, ivFile::Dist dist) const;
+
+	//convert form a distance to a norm
+	inline float dist2Norm(ivDoc const & doc, ivFile::Dist dist, ivFile::Norm norm) const;
+
+private:
+	//array of word entries
+	size_t nwords;
+	ivWordList words;
+
+	//array of document entries
+	size_t ndocs;
+	ivDocList docs;
+
+	Params params;
+
+public:
+
+	//stream overloads
+	friend istream& operator>>(istream& is, ivFile& ivf);
+	friend ostream& operator<<(ostream& os, ivFile const& ivf);
 };
 
 
