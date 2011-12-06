@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9a9680ad-b591-445f-ac6e-d57e48efc79a}</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>test_runner.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>../../scripts</WorkingDirectory>
+    <AssemblyName>test_runner</AssemblyName>
+    <Name>test_runner</Name>
+    <RootNamespace>test_runner</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="test_runner.py" />
+  </ItemGroup>
+</Project>
