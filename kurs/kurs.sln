@@ -1,11 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ivfile_test", "ivfile_test\ivfile_test.vcxproj", "{16ECE474-03CA-48B6-A213-3F2666C10F1D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9F9EDF65-EC84-475F-A1EA-90331B457BFE} = {9F9EDF65-EC84-475F-A1EA-90331B457BFE}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ivfile", "ivfile\ivfile.vcxproj", "{9F9EDF65-EC84-475F-A1EA-90331B457BFE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kurs_proto", "kurs_proto\kurs_proto.vcxproj", "{D5D5A0E5-3E6E-4309-B214-4C6644851F62}"
