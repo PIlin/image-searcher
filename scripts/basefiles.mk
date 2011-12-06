@@ -209,7 +209,6 @@ image_0510.jpg \
 image_0511.jpg \
 image_0512.jpg \
 image_0513.jpg \
-image_0514.jpg \
 image_0515.jpg \
 image_0516.jpg \
 image_0517.jpg \
@@ -909,7 +908,6 @@ image_1224.jpg \
 image_1225.jpg \
 image_1226.jpg \
 image_1227.jpg \
-image_1228.jpg \
 image_1229.jpg \
 image_1230.jpg \
 image_1231.jpg \
@@ -998,7 +996,9 @@ image_2354.jpg \
 image_2355.jpg \
 image_2356.jpg \
 image_2357.jpg \
-image_2359.jpg 
+image_2359.jpg \
+image_3688.jpg \
+image_4738.jpg 
 
 BASEFILES := $(addprefix ../../images/caltech_1000/,$(BASEFILES))
 BASEFILES := $(abspath $(BASEFILES))
