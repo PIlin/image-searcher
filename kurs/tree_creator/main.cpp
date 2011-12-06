@@ -78,19 +78,9 @@ void prepare(int argc, char* argv[], std::string& ofname, str_vector& sift_infil
 	}
 }
 
-int main(int argc, char* argv[]) try
+void readSiftInFilese( str_vector &sift_infiles, std::vector<SiftDescr> &all_descr ) 
 {
 	TRACE;
-
-	std::string ofname;
-	str_vector sift_infiles;
-	HIKMTree::Params hikmParams;
-
-	prepare(argc, argv, ofname, sift_infiles, hikmParams);
-	
-	bfs::path ouf(ofname);
-
-	std::vector <SiftDescr> all_descr;
 
 	for (auto it = sift_infiles.begin(); it != sift_infiles.end(); ++it)
 	{
@@ -113,6 +103,23 @@ int main(int argc, char* argv[]) try
 			all_descr.insert(all_descr.end(), b, e);
 		}
 	}
+}
+int main(int argc, char* argv[]) try
+{
+	TRACE;
+
+	std::string ofname;
+	str_vector sift_infiles;
+	HIKMTree::Params hikmParams;
+
+	prepare(argc, argv, ofname, sift_infiles, hikmParams);
+	
+	bfs::path ouf(ofname);
+
+	std::vector <SiftDescr> all_descr;
+
+	readSiftInFilese(sift_infiles, all_descr);
+
 
 	HIKMTree tree(hikmParams);
 	tree.train(all_descr);

@@ -110,6 +110,22 @@ void print_help(char const* pname)
 	std::cout << pname << " ivf_outfile tree_infile word_infile [word_infile ...]" << std::endl;
 }
 
+void readWordInfiles( str_vector &word_infiles, docvec &dv ) 
+{
+	TRACE;
+
+	for (auto it = word_infiles.cbegin(); it != word_infiles.end(); ++it)
+	{
+		auto inf = *it;
+		if (!checkFile(inf))
+			throw std::runtime_error(inf + " not found");
+
+		Image img("");
+		img.load(inf);
+
+		dv.push_back(img.getWords());
+	}
+}
 int main(int argc, char* argv[]) try
 {
 	TRACE;
@@ -126,17 +142,7 @@ int main(int argc, char* argv[]) try
 
 	docvec dv;
 
-	for (auto it = word_infiles.cbegin(); it != word_infiles.end(); ++it)
-	{
-		auto inf = *it;
-		if (!checkFile(inf))
-			throw std::runtime_error(inf + " not found");
-		
-		Image img("");
-		img.load(inf);
-
-		dv.push_back(img.getWords());
-	}
+	readWordInfiles(word_infiles, dv);
 
 	HIKMTree tree(1,2,3);
 	tree.load(tree_infile);
@@ -144,7 +150,6 @@ int main(int argc, char* argv[]) try
 	ivFile file(params);
 	file.fill(dv, tree.maxWord(), 0);
 	file.computeStats();
-
 
 	file.save(ofname);
 
