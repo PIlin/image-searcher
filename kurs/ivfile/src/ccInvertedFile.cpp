@@ -360,7 +360,7 @@ void ivFile::search(const wordtype* wlabel, uint ntokens,
 	bool overlapOnly, uint k, ivNodeList& scorelist) const
 	//        float* scores, uint* docs, uint& nret)
 {
-	cout << __FUNCTION__ << endl;
+	cerr << __FUNCTION__ << endl;
 
 	//return if empty
 	if (words.empty()) return;
@@ -512,7 +512,7 @@ void ivFile::search(docvec const & data,
 	ivFile::Weight weight, ivFile::Norm norm, ivFile::Dist dist,
 	bool overlapOnly, uint k, ivNodeLists& scorelists, bool verbose=false) const
 {
-	cout << __FUNCTION__ << "weight " << weight << " norm " << norm << " dist " << dist << endl;
+	cerr << __FUNCTION__ << "weight " << weight << " norm " << norm << " dist " << dist << endl;
 	//number of documents
 	uint ndocs = data.size();
 

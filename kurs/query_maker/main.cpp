@@ -91,13 +91,13 @@ int main(int argc, char* argv[]) try
 	option_dependency(vm, "words", "ivf");
 	option_dependency(vm, "words", "output");
 
-#define PR(a) std::cout << #a << " = " << a << endl;
-	PR(ifname);
-	PR(wfname);
-	PR(tfname);
-	PR(invfname);
-	PR(ofname);
-#undef PR
+//#define PR(a) std::cout << #a << " = " << a << endl;
+//	PR(ifname);
+//	PR(wfname);
+//	PR(tfname);
+//	PR(invfname);
+//	PR(ofname);
+//#undef PR
 
 	if (!checkFile(tfname))
 		throw std::runtime_error(tfname + " not found");

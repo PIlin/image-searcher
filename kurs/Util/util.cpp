@@ -37,7 +37,7 @@ double Timer::toc()
 Trace::Trace(char const* fname) : 
 	fname(fname) 
 { 
-	std::cout << fname
+	std::cerr << fname
 //		<< std::endl; 
 		<< '\n';
 	timer.tic(); 
@@ -45,7 +45,7 @@ Trace::Trace(char const* fname) :
 
 Trace::~Trace() 
 { 
-	std::cout << fname << " done " << timer.toc() 
+	std::cerr << fname << " done " << timer.toc() 
 //		<< std::endl; 
 		<< '\n';
 }
