@@ -67,7 +67,7 @@ clean:
 
 query: $(QUERY_IN_FILE)
 	$(QUERY_MAKER) -i $(shell cat $(QUERY_IN_FILE)) -t $(TREE_FILE) -v $(IVF_FILE) -o  $(QUERY_OUT_FILE)
-	python query.py $(FILELIST_FILE) $(QUERY_IN_FILE) $(QUERY_OUT_FILE) $(RES_OUT_FILE)
+	query2html.py $(FILELIST_FILE) $(QUERY_IN_FILE) $(QUERY_OUT_FILE) $(RES_OUT_FILE)
 	
 $(BASE_DIR): 
 	mkdir -p $@
