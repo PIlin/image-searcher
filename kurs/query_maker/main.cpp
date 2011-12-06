@@ -28,7 +28,7 @@ void calc_words(Image& img, HIKMTree& tree)
 	tree.push(img);
 }
 
-void make_query(Image& img, HIKMTree& tree, ivFile& ivf, std::ostream& out)
+void make_query(Image& img, HIKMTree& tree, ivFile& ivf, ivFile::Dist& dist, std::ostream& out)
 {
 	TRACE;
 
@@ -38,7 +38,7 @@ void make_query(Image& img, HIKMTree& tree, ivFile& ivf, std::ostream& out)
 	ivNodeLists score;
 
 	ivf.search(query, 
-		ivFile::DIST_L1,
+		dist,
         false, (uint)5, score, false);
 	
 	for (auto it = score.begin(); it != score.end(); ++it)
@@ -52,6 +52,21 @@ void make_query(Image& img, HIKMTree& tree, ivFile& ivf, std::ostream& out)
 	}
 }
 
+std::istream& operator>>(std::istream& is, ivFile::Dist& dist)
+{
+	std::string str;
+	is >> str;
+	if      (str == "l1")        dist = ivFile::DIST_L1;
+	else if (str == "l2")        dist = ivFile::DIST_L2;
+	else if (str == "ham")       dist = ivFile::DIST_HAM;
+	else if (str == "kl")        dist = ivFile::DIST_KL;
+	else if (str == "cos")       dist = ivFile::DIST_COS;
+	else if (str == "jac")       dist = ivFile::DIST_JAC;
+	else if (str == "hist-int")  dist = ivFile::DIST_HISTINT;
+	else throw bpo::validation_error(bpo::validation_error::invalid_option_value, str);
+	return is;
+}
+
 int main(int argc, char* argv[]) try
 {
 	TRACE;
@@ -61,6 +76,7 @@ int main(int argc, char* argv[]) try
 	string tfname;
 	string invfname;
 	string ofname;
+	ivFile::Dist dist = ivFile::DIST_L1;
 
 	bpo::options_description desc("");
 	desc.add_options()
@@ -71,6 +87,13 @@ int main(int argc, char* argv[]) try
 		("ivf,v", bpo::value(&invfname), "Inverted file")
 		("output,o", bpo::value(&ofname), "Results output")
 		;
+
+	bpo::options_description optParams("Parameters");
+	optParams.add_options()
+		("dist,D", bpo::value(&dist), "Distance function in ivf")
+		;
+
+	desc.add(optParams);
 
 	bpo::variables_map vm;
 	bpo::store(bpo::parse_command_line(argc, argv, desc), vm);
@@ -126,12 +149,12 @@ int main(int argc, char* argv[]) try
 	}
 
 	if (ofname == "--")
-		make_query(img, tree, ivf, cout);
+		make_query(img, tree, ivf, dist, cout);
 	else
 	{
 		ofstream ofs;
 		ofs.open(ofname);
-		make_query(img, tree, ivf, ofs);
+		make_query(img, tree, ivf, dist, ofs);
 		ofs.close();
 	}
 
