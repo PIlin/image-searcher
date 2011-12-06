@@ -32,7 +32,7 @@ void read_inlist_file(std::string const & file, str_vector & list)
 	ifs.close();
 }
 
-void prepare(int argc, char* argv[], std::string& ofname, str_vector& sift_infiles) 
+void prepare(int argc, char* argv[], std::string& ofname, str_vector& sift_infiles, HIKMTree::Params& hikmParams) 
 {
 	std::string inlist_file;
 
@@ -43,6 +43,14 @@ void prepare(int argc, char* argv[], std::string& ofname, str_vector& sift_infil
 		("list,l", bpo::value(&inlist_file), "File with the list of input sift files")
 		("input,i", bpo::value(&sift_infiles), "Sift descriptors input files")
 		;
+
+	bpo::options_description optParams("Tree parameters");
+	optParams.add_options()
+		("clustres,C", bpo::value(&hikmParams.clusters)->default_value(hikmParams.clusters), "Count of clusters on each level")
+		("leaves,L", bpo::value(&hikmParams.leaves)->default_value(hikmParams.leaves), "Maximum number of leaves")
+		;
+
+	desc.add(optParams);
 
 	bpo::positional_options_description p;
 	p.add("input", -1);
@@ -76,8 +84,9 @@ int main(int argc, char* argv[]) try
 
 	std::string ofname;
 	str_vector sift_infiles;
+	HIKMTree::Params hikmParams;
 
-	prepare(argc, argv, ofname, sift_infiles);
+	prepare(argc, argv, ofname, sift_infiles, hikmParams);
 	
 	bfs::path ouf(ofname);
 
@@ -105,13 +114,8 @@ int main(int argc, char* argv[]) try
 		}
 	}
 
-	int dims = 128;
-	int clusters = 3;
-	int leaves = 100;
-
-	HIKMTree tree(dims, clusters, leaves);
+	HIKMTree tree(hikmParams);
 	tree.train(all_descr);
-
 	tree.save(ouf.string());
 
 	return 0;

@@ -9,13 +9,14 @@ HIKMTree::HIKMTree(int dims, int clusters, int leaves, VlIKMAlgorithms method):
 	mTree(nullptr),
 	mLeaves(leaves)
 {
-	mTree = vl_hikm_new(method);
-	if (!mTree)
-		throw std::bad_alloc("vl_hikm_new returned nullptr");
+	Init(dims, clusters, method);
+}
 
-	int depth = VL_MAX(1, ceil (log ((double)leaves * 1.0) / log((double)clusters)));
-
-	vl_hikm_init(mTree, dims, clusters, depth);
+HIKMTree::HIKMTree(HIKMTree::Params& params):
+	mTree(nullptr),
+	mLeaves(params.leaves)
+{
+	Init(params.dims, params.clusters, params.method);
 }
 
 HIKMTree::HIKMTree(std::string const &fname) :
@@ -28,6 +29,17 @@ HIKMTree::HIKMTree(std::string const &fname) :
 HIKMTree::~HIKMTree(void)
 {
 	vl_hikm_delete(mTree);
+}
+
+void HIKMTree::Init(int dims, int clusters, VlIKMAlgorithms method)
+{
+	mTree = vl_hikm_new(method);
+	if (!mTree)
+		throw std::bad_alloc("vl_hikm_new returned nullptr");
+
+	int depth = VL_MAX(1, ceil (log ((double)mLeaves * 1.0) / log((double)clusters)));
+
+	vl_hikm_init(mTree, dims, clusters, depth);
 }
 
 void HIKMTree::train(std::vector<unsigned char> const & data)

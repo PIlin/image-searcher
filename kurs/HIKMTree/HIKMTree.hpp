@@ -13,7 +13,25 @@ class Image;
 class HIKMTree
 {
 public:
+
+	struct Params
+	{
+		Params(int dims = 128, int clusters = 3, int leaves = 100, VlIKMAlgorithms method = VL_IKM_ELKAN) :
+			dims(dims),
+			clusters(clusters),
+			leaves(leaves),
+			method(method)
+		{
+		}
+
+		int dims;
+		int clusters;
+		int leaves;
+		VlIKMAlgorithms method;
+	};
+
 	HIKMTree(int dims, int clusters, int leaves, VlIKMAlgorithms method = VL_IKM_ELKAN);
+	HIKMTree(HIKMTree::Params& params);
 	HIKMTree(std::string const &fname);
 	~HIKMTree(void);
 
@@ -50,6 +68,8 @@ public:
 	friend std::istream& operator>>(std::istream& is, VlIKMFilt & filt);
 
 private:
+
+	void Init(int dims, int clusters, VlIKMAlgorithms method);
 
 	HIKMTree(HIKMTree const & reff);
 
