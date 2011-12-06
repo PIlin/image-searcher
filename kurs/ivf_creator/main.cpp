@@ -33,7 +33,31 @@ void read_inlist_file(std::string const & file, str_vector & list)
 	ifs.close();
 }
 
-void prepare(int argc, char* argv[], std::string& ofname, std::string& tree_infile, str_vector& word_infiles) 
+std::istream& operator>>(std::istream& is, ivFile::Norm& norm)
+{
+	std::string str;
+	is >> str;
+	if      (str == "none")  norm = ivFile::NORM_NONE;
+	else if (str == "l0")    norm = ivFile::NORM_L0;
+	else if (str == "l1")    norm = ivFile::NORM_L1;
+	else if (str == "l2")    norm = ivFile::NORM_L2; 
+	else throw bpo::validation_error(bpo::validation_error::invalid_option_value, str);
+	return is;
+}
+
+std::istream& operator>>(std::istream& is, ivFile::Weight& wt)
+{
+	std::string str;
+	is >> str;
+	if      (str == "none")   wt = ivFile::WEIGHT_NONE;
+	else if (str == "bin")    wt = ivFile::WEIGHT_BIN;
+	else if (str == "tf")     wt = ivFile::WEIGHT_TF;
+	else if (str == "tfidf")  wt = ivFile::WEIGHT_TFIDF;
+	else throw bpo::validation_error(bpo::validation_error::invalid_option_value, str);
+	return is;
+}
+
+void prepare(int argc, char* argv[], std::string& ofname, std::string& tree_infile, str_vector& word_infiles, ivFile::Params& params) 
 {
 	std::string inlist_file;
 
@@ -45,6 +69,14 @@ void prepare(int argc, char* argv[], std::string& ofname, std::string& tree_infi
 		("list,l", bpo::value(&inlist_file), "File with the list of input sift files")
 		("input,i", bpo::value(&word_infiles), "Words input files")
 		;
+
+	bpo::options_description optParams("IVF parameters");
+	optParams.add_options()
+		("weight,W", bpo::value(&params.weight), "Weight: none, bin, tf, tfidf")
+		("norm,N", bpo::value(&params.norm), "Norm: none, l0, l1, l2")
+		;
+
+	desc.add(optParams);
 
 	bpo::positional_options_description p;
 	p.add("input", -1);
@@ -85,8 +117,9 @@ int main(int argc, char* argv[]) try
 	std::string ofname;
 	std::string tree_infile;
 	str_vector word_infiles;
+	ivFile::Params params;
 
-	prepare(argc, argv, ofname, tree_infile, word_infiles);
+	prepare(argc, argv, ofname, tree_infile, word_infiles, params);
 
 	if (!checkFile(tree_infile))
 		throw std::runtime_error(tree_infile + " not found");
@@ -108,7 +141,7 @@ int main(int argc, char* argv[]) try
 	HIKMTree tree(1,2,3);
 	tree.load(tree_infile);
 
-	ivFile file;
+	ivFile file(params);
 	file.fill(dv, tree.maxWord(), 0);
 	file.computeStats();
 
