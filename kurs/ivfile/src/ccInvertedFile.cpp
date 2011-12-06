@@ -8,6 +8,8 @@
 
 #include "ccInvertedFile.hpp"
 
+#include "Util/util.hpp"
+
 #include "vc_fix.hpp"
 
 
@@ -705,8 +707,8 @@ istream& operator>>(istream& is, ivFile::Params& pr)
 {
 	uint a;
 
-	is >> a; pr.norm   = static_cast<ivFile::Norm>(a);
-	is >> a; pr.weight = static_cast<ivFile::Weight>(a);
+	READ(a); pr.norm   = static_cast<ivFile::Norm>(a);
+	READ(a); pr.weight = static_cast<ivFile::Weight>(a);
 	
 	try 
 	{
@@ -724,8 +726,8 @@ istream& operator>>(istream& is, ivFile::Params& pr)
 ostream& operator<<(ostream& os, ivFile::Params const& pr)
 {
 	uint a;
-	a = pr.norm;   os << a;
-	a = pr.weight; os << a;
+	a = pr.norm;   WRITE(a);
+	a = pr.weight; WRITE(a);
 
 	return os;
 }
