@@ -62,8 +62,15 @@ base: $(FILELIST_FILE) $(TREE_FILE) $(IVF_FILE)
 
 
 clean:
-	rm -rf $(BASE_DIR)
+	-rm -rf $(BASE_DIR)
 
+testclean:
+	-rm -f $(FILELIST_FILE)
+	-rm -f $(SIFTLIST_FILE)
+	-rm -f $(WORDLIST_FILE)
+	-rm -f $(TREE_FILE)
+	-rm -f $(IVF_FILE)
+	-rm -f $(BASE_DIR)/*.word
 
 query: $(QUERY_IN_FILE)
 	$(QUERY_MAKER) -i $(shell cat $(QUERY_IN_FILE)) -t $(TREE_FILE) -v $(IVF_FILE) -o  $(QUERY_OUT_FILE)
