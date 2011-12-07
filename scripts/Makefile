@@ -36,14 +36,14 @@ endef
 $(foreach file,$(BASEFILES),$(eval $(call SIFT_FILE_template,$(file))))
 
 $(TREE_FILE): $(ALL_SIFT_FILES) $(SIFTLIST_FILE) $(BASEFILES_LIST) | $(BASE_DIR)
-	$(TREE_CREATOR) -o $@ -l $(SIFTLIST_FILE)
+	$(TREE_CREATOR) -o $@ -l $(SIFTLIST_FILE) $(TREE_CREATOR_OPTS)
 
 
 %.word : $(TREE_FILE) %.sift | $(BASE_DIR)
 	$(IWORDS) $^ $@
 
 $(IVF_FILE): $(TREE_FILE) $(ALL_WORD_FILES) $(WORDLIST_FILE) $(BASEFILES_LIST) | $(BASE_DIR)
-	$(IVF_CREATOR) -o $@ -t $(TREE_FILE) -l $(WORDLIST_FILE)
+	$(IVF_CREATOR) -o $@ -t $(TREE_FILE) -l $(WORDLIST_FILE) $(IVF_CREATOR_OPTS)
 	
 $(FILELIST_FILE): $(BASEFILES_LIST) | $(BASE_DIR)
 	$(call write-to-file,$@,$(BASEFILES))
@@ -65,16 +65,16 @@ clean:
 	-rm -rf $(BASE_DIR)
 
 testclean:
-	-rm -f $(FILELIST_FILE)
-	-rm -f $(SIFTLIST_FILE)
-	-rm -f $(WORDLIST_FILE)
+	# -rm -f $(FILELIST_FILE)
+	# -rm -f $(SIFTLIST_FILE)
+	# -rm -f $(WORDLIST_FILE)
 	-rm -f $(TREE_FILE)
 	-rm -f $(IVF_FILE)
-	-rm -f $(BASE_DIR)/*.word
+	rm -f $(BASE_DIR)/*.word
 
 query: $(QUERY_IN_FILE)
 	$(QUERY_MAKER) -i $(shell cat $(QUERY_IN_FILE)) -t $(TREE_FILE) -v $(IVF_FILE) -o  $(QUERY_OUT_FILE)
-	query2html.py $(FILELIST_FILE) $(QUERY_IN_FILE) $(QUERY_OUT_FILE) $(RES_OUT_FILE)
+	python query2html.py $(FILELIST_FILE) $(QUERY_IN_FILE) $(QUERY_OUT_FILE) $(RES_OUT_FILE)
 	
 $(BASE_DIR): 
 	mkdir -p $@
