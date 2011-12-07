@@ -35,6 +35,7 @@ void read_inlist_file(std::string const & file, str_vector & list)
 void prepare(int argc, char* argv[], std::string& ofname, str_vector& sift_infiles, HIKMTree::Params& hikmParams) 
 {
 	std::string inlist_file;
+	std::string config;
 
 	bpo::options_description desc("");
 	desc.add_options()
@@ -42,6 +43,7 @@ void prepare(int argc, char* argv[], std::string& ofname, str_vector& sift_infil
 		("output,o", bpo::value(&ofname)->required(), "Output tree file")
 		("list,l", bpo::value(&inlist_file), "File with the list of input sift files")
 		("input,i", bpo::value(&sift_infiles), "Sift descriptors input files")
+		("config,c", bpo::value(&config), "Config file")
 		;
 
 	bpo::options_description optParams("Tree parameters");
@@ -52,6 +54,9 @@ void prepare(int argc, char* argv[], std::string& ofname, str_vector& sift_infil
 
 	desc.add(optParams);
 
+	bpo::options_description config_file_options;
+	config_file_options.add(optParams);
+
 	bpo::positional_options_description p;
 	p.add("input", -1);
 
@@ -61,6 +66,11 @@ void prepare(int argc, char* argv[], std::string& ofname, str_vector& sift_infil
 	{
 		std::cout << desc << std::endl;
 		exit(0);
+	}
+
+	if (vm.count("config"))
+	{
+		bpo::store(bpo::parse_config_file<char>(vm["config"].as<std::string>().c_str(), config_file_options), vm);
 	}
 
 	bpo::notify(vm);

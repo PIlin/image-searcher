@@ -60,6 +60,7 @@ std::istream& operator>>(std::istream& is, ivFile::Weight& wt)
 void prepare(int argc, char* argv[], std::string& ofname, std::string& tree_infile, str_vector& word_infiles, ivFile::Params& params) 
 {
 	std::string inlist_file;
+	std::string config;
 
 	bpo::options_description desc("");
 	desc.add_options()
@@ -68,6 +69,7 @@ void prepare(int argc, char* argv[], std::string& ofname, std::string& tree_infi
 		("tree,t", bpo::value(&tree_infile)->required(), "HIKM Tree file")
 		("list,l", bpo::value(&inlist_file), "File with the list of input sift files")
 		("input,i", bpo::value(&word_infiles), "Words input files")
+		("config,c", bpo::value(&config), "Config file")
 		;
 
 	bpo::options_description optParams("IVF parameters");
@@ -78,6 +80,9 @@ void prepare(int argc, char* argv[], std::string& ofname, std::string& tree_infi
 
 	desc.add(optParams);
 
+	bpo::options_description config_file_options;
+	config_file_options.add(optParams);
+
 	bpo::positional_options_description p;
 	p.add("input", -1);
 
@@ -87,6 +92,11 @@ void prepare(int argc, char* argv[], std::string& ofname, std::string& tree_infi
 	{
 		std::cout << desc << std::endl;
 		exit(0);
+	}
+
+	if (vm.count("config"))
+	{
+		bpo::store(bpo::parse_config_file<char>(vm["config"].as<std::string>().c_str(), config_file_options), vm);
 	}
 
 	bpo::notify(vm);
