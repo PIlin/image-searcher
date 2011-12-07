@@ -1,3 +1,4 @@
+import os
 import sys
 import urlparse
 
@@ -19,6 +20,9 @@ f.close()
 f = open(query_in, 'rU')
 query = f.readline()
 f.close()
+
+query = os.path.abspath(query).replace(r"cygdrive/d", r"D:")
+
 
 f = open(query_out, 'rU')
 ql = f.read().splitlines()
