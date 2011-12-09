@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1b1404b3-3f90-4bef-9668-e78b998ccddb}</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>test_interpreter.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>../../scripts</WorkingDirectory>
+    <AssemblyName>test_interpreter</AssemblyName>
+    <Name>test_interpreter</Name>
+    <RootNamespace>test_interpreter</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="test_interpreter.py" />
+  </ItemGroup>
+</Project>
