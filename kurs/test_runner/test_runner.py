@@ -178,12 +178,15 @@ def make_testclean():
 
 #make_base([writeIvfConfig(1,1), writeTreeConfig(3,200)])
 
-def run_test(f, d, w, n, cl, lv):
-    print({'f':fname(f), 'd':d, 'w':w, 'n':n, 'cl':cl, 'lv':lv})
-    res_file = "%(f)s__%(d)s__%(w)s__%(n)s__%(cl)d__%(lv)d.res" %\
+def res_file(f,d,w,n,cl,lv):
+    return "%(f)s__%(d)s__%(w)s__%(n)s__%(cl)d__%(lv)d.res" % \
         {'f':fname(f), 'd':d, 'w':w, 'n':n, 'cl':cl, 'lv':lv}
 
-    rf = open(res_dir + r'/' + res_file, 'wb')
+def run_test(f, d, w, n, cl, lv):
+    res_f = res_file(f,d,w,n,cl,lv)
+    print(res_f)    
+
+    rf = open(res_dir + r'/' + res_f, 'wb')
 
     make_testclean()
     make_base([writeIvfConfigS(w,n), writeTreeConfigS(cl, lv)])
