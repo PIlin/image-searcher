@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import subprocess
 import pickle
@@ -37,6 +39,7 @@ folders = [r'../../images/50/orig',
            r'../../images/50/scale12',
            r'../../images/50/scale2']
 
+
 res_dir = r'res'
 
 file_list  = r'cache/file.list'
@@ -46,7 +49,7 @@ ivf_file   = r'cache/ivf.file'
 ivf_config  = r'ivf.config'
 tree_config = r'tree.config'
 
-query_maker = r'../kurs/bin/query_maker.exe'
+query_maker = r'../kurs/bin/query_maker'
 
 ivf_w_params = [r'none', r'tfidf']
 ivf_n_params = [r'l1', r'l2']
@@ -55,6 +58,11 @@ ivf_n_params = [r'l1', r'l2']
 #ivf_n_params = [r'none', r'l0', r'l1', r'l2']
 
 q_d_params = [r'l1', r'l2', r'cos']
+
+clust = [3,5,10]
+leavs = [20, 50, 100]
+
+###################################
 
 def getIvfCmdParams(w, n):
     return r"IVF_CREATOR_OPTS='-W%(w)s -N%(n)s'" % \
@@ -109,7 +117,7 @@ def num2file(num):
 def make_query(query, tree, ivf, dist):
     cmd = ' '.join([query_maker, '-i', query, '-t', tree, '-v', ivf, '-D', dist, '-o --'])
     print(cmd)
-    res = check_output(cmd)
+    res = check_output(cmd, shell=True)
     return res.splitlines()
 
 def fname(path):
@@ -142,9 +150,11 @@ def test(dir, dist):
 def make_base(params = []):
     prm = ['-j4']
     prm.extend(params)
-    cmd = ['make', 'base']
+    cmd = ['make']
     cmd.extend(prm)
-    print (' '.join(cmd))
+    cmd.append('base')
+    cmd = ' '.join(cmd)
+    print (cmd)
     res = ''
     try:
         res = check_output(cmd, stderr = subprocess.STDOUT, shell=True)
@@ -187,11 +197,18 @@ def run_test(f, d, w, n, cl, lv):
 
 
 def run_folder(f):
+    #ivf_w_params.reverse()
+    #ivf_n_params.reverse()
+    #q_d_params.reverse()
+    #clust.reverse()
+    #leavs.reverse()
+    #folders.reverse()
+
     for w in ivf_w_params:
         for n in ivf_n_params:
             for d in q_d_params:
-                for cl in [3,5,10]:
-                    for lv in [20, 50, 100]:
+                for cl in clust:
+                    for lv in leavs:
                         run_test(f, d, w, n, cl, lv)
                         #return
                         pass
@@ -204,7 +221,6 @@ def run_folder(f):
 
 def run_all():
     for f in folders:
-        run_folder(f)
         pass
     return
 
