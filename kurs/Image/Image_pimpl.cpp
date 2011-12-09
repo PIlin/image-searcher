@@ -14,5 +14,6 @@ Image_pimpl::~Image_pimpl(void)
 
 void Image_pimpl::open( std::string const & fname )
 {
-	mImage = toGrayscale(CIMG(fname.c_str()));
+	CIMG tmp(fname.c_str());
+	mImage = toGrayscale(tmp);
 }

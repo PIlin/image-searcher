@@ -1,4 +1,6 @@
+#include <cmath>
 #include <exception>
+#include <stdexcept>
 #include <fstream>
 
 #include "HIKMTree.hpp"
@@ -35,7 +37,7 @@ void HIKMTree::Init(int dims, int clusters, VlIKMAlgorithms method)
 {
 	mTree = vl_hikm_new(method);
 	if (!mTree)
-		throw std::bad_alloc("vl_hikm_new returned nullptr");
+		throw std::bad_alloc();
 
 	int depth = VL_MAX(1, ceil (log ((double)mLeaves * 1.0) / log((double)clusters)));
 
@@ -128,100 +130,6 @@ void HIKMTree::load(std::istream& is)
 //////////////////////////////////////////////////////////////////////////
 
 
-
-std::ostream& operator<<(std::ostream& os, HIKMTree const & tree)
-{
-	WRITE(tree.mLeaves);
-	if (!tree.mTree)
-		throw std::runtime_error("mTree in HIKMTree is nullptr. Cannot save it");
-	os << *tree.mTree;
-	return os;
-}
-
-std::istream& operator>>(std::istream& is, HIKMTree & tree)
-{
-	READ(tree.mLeaves);
-
-	vl_hikm_delete(tree.mTree);
-	tree.mTree = vl_hikm_new(0);
-
-	is >> *tree.mTree;
-	return is;
-}
-
-
-std::ostream& operator<<(std::ostream& os, VlHIKMTree const& tree)
-{
-	WRITE(tree.M);
-	WRITE(tree.K);
-	WRITE(tree.max_niters);
-	WRITE(tree.method);
-	WRITE(tree.verb);
-	WRITE(tree.depth);
-	if (!tree.root)
-		throw std::runtime_error("root in VlHIKMTree is nullptr. Cannot save it");
-	os << *tree.root;
-	return os;
-}
-
-std::istream& operator>>(std::istream& is, VlHIKMTree & tree)
-{
-	READ(tree.M);
-	READ(tree.K);
-	READ(tree.max_niters);
-	READ(tree.method);
-	READ(tree.verb);
-	READ(tree.depth);
-
-	tree.root = static_cast<VlHIKMNode*>(vl_malloc(sizeof(*tree.root)));
-	is >> *tree.root;
-	return is;
-}
-
-std::ostream& operator<<(std::ostream& os, VlHIKMNode const& node)
-{
-	if (!node.filter)
-		throw std::runtime_error("filter in VlHIKMNode is nullptr. Cannot save it");
-	
-	os << *node.filter;
-	bool chld =  (node.children != nullptr);
-	WRITE(chld);
-	if (chld)
-	{
-		for (int k = 0; k < node.filter->K; ++k)
-		{
-			if (!node.children[k])
-				throw std::runtime_error("children[k] in VlHIKMNode is nullptr. Cannot save it");
-			os << *node.children[k];
-		}
-	}
-	
-	return os;
-}
-
-std::istream& operator>>(std::istream& is, VlHIKMNode & node)
-{
-	node.filter = vl_ikm_new(0);
-	is >> *node.filter;
-
-	bool chld = false;
-	READ(chld);
-	if (chld)
-	{
-		node.children = static_cast<VlHIKMNode**>(vl_malloc(sizeof(*node.children) * node.filter->K));
-		for (int k = 0; k < node.filter->K; ++k)
-		{
-			node.children[k] = static_cast<VlHIKMNode*>(vl_malloc(sizeof(*node.children[k])));
-			is >> *node.children[k];
-		}
-	}
-	else
-	{
-		node.children = nullptr;
-	}
-	return is;
-}
-
 std::ostream& operator<<(std::ostream& os, VlIKMFilt const& filt)
 {
 	WRITE(filt.M);
@@ -272,3 +180,98 @@ std::istream& operator>>(std::istream& is, VlIKMFilt & filt)
 
 	return is;
 }
+std::ostream& operator<<(std::ostream& os, VlHIKMNode const& node)
+{
+	if (!node.filter)
+		throw std::runtime_error("filter in VlHIKMNode is nullptr. Cannot save it");
+	
+	os << *node.filter;
+	bool chld = (nullptr != node.children);
+	WRITE(chld);
+	if (chld)
+	{
+		for (int k = 0; k < node.filter->K; ++k)
+		{
+			if (!node.children[k])
+				throw std::runtime_error("children[k] in VlHIKMNode is nullptr. Cannot save it");
+			os << *node.children[k];
+		}
+	}
+	
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, VlHIKMNode & node)
+{
+	node.filter = vl_ikm_new(0);
+	is >> *node.filter;
+
+	bool chld = false;
+	READ(chld);
+	if (chld)
+	{
+		node.children = static_cast<VlHIKMNode**>(vl_malloc(sizeof(*node.children) * node.filter->K));
+		for (int k = 0; k < node.filter->K; ++k)
+		{
+			node.children[k] = static_cast<VlHIKMNode*>(vl_malloc(sizeof(*node.children[k])));
+			is >> *node.children[k];
+		}
+	}
+	else
+	{
+		node.children = nullptr;
+	}
+	return is;
+}
+
+std::ostream& operator<<(std::ostream& os, VlHIKMTree const& tree)
+{
+	WRITE(tree.M);
+	WRITE(tree.K);
+	WRITE(tree.max_niters);
+	WRITE(tree.method);
+	WRITE(tree.verb);
+	WRITE(tree.depth);
+	if (!tree.root)
+		throw std::runtime_error("root in VlHIKMTree is nullptr. Cannot save it");
+	os << *tree.root;
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, VlHIKMTree & tree)
+{
+	READ(tree.M);
+	READ(tree.K);
+	READ(tree.max_niters);
+	READ(tree.method);
+	READ(tree.verb);
+	READ(tree.depth);
+
+	tree.root = static_cast<VlHIKMNode*>(vl_malloc(sizeof(*tree.root)));
+	is >> *tree.root;
+	return is;
+}
+
+std::ostream& operator<<(std::ostream& os, HIKMTree const & tree)
+{
+	WRITE(tree.mLeaves);
+	if (!tree.mTree)
+		throw std::runtime_error("mTree in HIKMTree is nullptr. Cannot save it");
+	os << *tree.mTree;
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, HIKMTree & tree)
+{
+	READ(tree.mLeaves);
+
+	vl_hikm_delete(tree.mTree);
+	tree.mTree = vl_hikm_new(0);
+
+	is >> *tree.mTree;
+	return is;
+}
+
+
+
+
