@@ -1,6 +1,9 @@
 #include <exception>
+#include <stdexcept>
 
 #include "Sift.hpp"
+
+#include "Util/util.hpp"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -11,13 +14,13 @@ template <typename T>
 VL_INLINE T convertDescriptor(vl_sift_pix x);
 
 template <>
-VL_INLINE float convertDescriptor(vl_sift_pix x)
+float convertDescriptor(vl_sift_pix x)
 {
 	return 512.0F * x;
 }
 
 template <>
-VL_INLINE unsigned char convertDescriptor(vl_sift_pix x)
+unsigned char convertDescriptor(vl_sift_pix x)
 {
 	float fx = 512.0F * x ;
 	return (unsigned char)((fx < 255.0F) ? fx : 255.0F);
@@ -33,7 +36,7 @@ mData(nullptr)
 {
 	mSiftFlt = vl_sift_new(width, height, noct, nlev, o_min);
 	if (!mSiftFlt)
-		throw std::bad_alloc("vl_sift_new returned nullptr");
+		throw std::bad_alloc();
 }
 
 

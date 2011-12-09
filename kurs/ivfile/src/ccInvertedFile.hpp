@@ -2,7 +2,8 @@
 #define CC_INVERTEDFILE
 
 
-
+#include <exception>
+#include <stdexcept>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -285,8 +286,8 @@ public:
 	// nwords   - number of words
 	// ndocs    - number of docs
 	//
-	void fill(wordtype* wlabel, wordtype* dlabel, uint ntokens, 
-		uint nwords, uint ndocs);
+	void fill(wordtype* wlabel, wordtype* dlabel, size_t ntokens, 
+		size_t nwords, size_t ndocs);
 
 	//fill the inverted file with input counts
 	//
